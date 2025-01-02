@@ -67,13 +67,15 @@ jobs:
 
     - name: Copy .jar file to EC2
       run: |
-        JAR_FILE="./build/libs/cicd-1.0-SNAPSHOT.jar" 
+        JAR_FILE=$(ls ./build/libs/*.jar | head -n 1)
         scp -i ~/.ssh/id_rsa $JAR_FILE ec2-user@${{ secrets.SERVER_IP }}:/home/ec2-user/
 
     - name: Deploy to AWS EC2
       run: |
-        JAR_FILE="./build/libs/cicd-1.0-SNAPSHOT.jar"
+        JAR_FILE=$(ls ./build/libs/*.jar | head -n 1)
         ssh -i ~/.ssh/id_rsa ec2-user@${{ secrets.SERVER_IP }} << 'EOF'
+          # Stop the current application 
           pkill -f 'java -jar'
+          # Start the new application
           nohup java -jar /home/ec2-user/$(basename $JAR_FILE) > /home/ec2-user/app.log 2>&1 &
         EOF
