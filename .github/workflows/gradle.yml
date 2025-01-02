@@ -54,6 +54,11 @@ jobs:
       run: |
         ls -al ./build/libs/
 
+    # 디버깅: 빌드 후 생성된 JAR 파일 확인
+    - name: Check if JAR file exists in build/libs
+      run: |
+        echo "Checking for JAR file in build/libs"
+        find $(pwd)/build/libs -name "*.jar"
 
   deploy:
     runs-on: ubuntu-latest
