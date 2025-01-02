@@ -65,10 +65,16 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
+    # 동적으로 .jar 파일 경로를 설정하여 EC2에 복사
+    - name: Set JAR_FILE dynamically
+      run: |
+        JAR_FILE=$(find ./build/libs -name "*.jar" | head -n 1)
+        echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV  # 환경 변수로 설정
+        echo "Found JAR file: $JAR_FILE"
+
     - name: Copy .jar file to EC2
       run: |
-        JAR_FILE=$(ls ./build/libs/*.jar | head -n 1)
-        scp -i ~/.ssh/id_rsa $JAR_FILE ec2-user@${{ secrets.SERVER_IP }}:/home/ec2-user/
+        scp -i ~/.ssh/id_rsa ${{ env.JAR_FILE }} ec2-user@${{ secrets.SERVER_IP }}:/home/ec2-user/
 
     - name: Deploy to AWS EC2
       run: |
