@@ -74,6 +74,9 @@ jobs:
     # 동적으로 .jar 파일 경로를 설정하여 EC2에 복사
     - name: Set JAR_FILE dynamically
       run: |
+        # 현재 디렉토리 확인
+        echo "Current directory: $(pwd)"
+        
         JAR_FILE=$(find ./build/libs -name "*.jar" | head -n 1)
         echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV  # 환경 변수로 설정
         echo "Found JAR file: $JAR_FILE"
