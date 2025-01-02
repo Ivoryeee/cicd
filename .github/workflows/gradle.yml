@@ -49,6 +49,12 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew clean build
 
+    # 디버깅: build/libs 디렉토리 내 파일 목록 출력
+    - name: List build/libs directory after build
+      run: |
+        ls -al ./build/libs/
+
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
